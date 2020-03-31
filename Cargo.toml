@@ -1,5 +1,6 @@
 [package]
 name = "funck"
+description = "Utilities for writing & deploying functions to a Funcky FaaS server."
 version = "0.1.0"
 authors = ["William Dussault <dalloriam@gmail.com>"]
 edition = "2018"
