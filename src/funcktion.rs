@@ -1,6 +1,6 @@
 use std::any::Any;
 
-use crate::CallError;
+use crate::{CallError, Request, Response};
 
 /// The Funcktion trait must be implemented by any cloud functions to be loaded in the system.
 ///
@@ -15,5 +15,5 @@ pub trait Funcktion: Any + Send + Sync {
     fn name(&self) -> &'static str;
 
     /// Generated wrapper that executes a funcktion, catching any panics that occur.
-    fn _call_internal(&self) -> Result<(), CallError>;
+    fn _call_internal(&self, req: Request) -> Result<Response, CallError>;
 }
