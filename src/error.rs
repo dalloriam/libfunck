@@ -3,12 +3,14 @@ use std::fmt;
 /// Error thrown automatically when the provided call method triggers an uwinding panic.
 #[derive(Debug, Clone)]
 pub struct CallError {
-    message: String
+    message: String,
 }
 
 impl CallError {
     pub fn new<T: AsRef<str>>(message: T) -> CallError {
-        CallError{message: String::from(message.as_ref())}
+        CallError {
+            message: String::from(message.as_ref()),
+        }
     }
 }
 
