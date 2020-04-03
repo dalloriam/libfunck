@@ -7,14 +7,16 @@
 ///
 /// # Examples
 /// ```
+/// use funck::{Request, Response, CallError};
+///
 /// const FUNCTION_NAME: &str = "my_function";
 ///
 /// #[derive(Default)]
 /// pub struct MyFunck;
 ///
 /// impl MyFunck {
-///     fn some_function(&self) {
-///         println!("Hello from FFI!");
+///     fn some_function(&self, request: Request) -> Result<Response, CallError> {
+///         Ok(Response::new().with_text(String::from("Hello from FFI")))
 ///     }
 /// }
 ///
@@ -26,18 +28,17 @@
 macro_rules! export {
     ($function_type:ty, $call_path:path, $str:tt) => {
         // Auto Funcktion implementation.
-        // TODO: Support having a $call_path function returning CallResults
         impl $crate::Funcktion for $function_type {
             // Return the user-provided name as a `&'static str`.
             fn name(&self) -> &'static str {
                 $str
             }
-            fn _call_internal(&self) -> $crate::CallResult<()> {
+            fn _call_internal(&self, req: $crate::Request) -> $crate::CallResult<$crate::Response> {
                 // Generate a panic handler for the exported function.
                 // This is necessary because unwinding a panic across FFI boundaries is UB.
-                match std::panic::catch_unwind(|| $call_path(self)) {
-                    Ok(_) => Ok(()),
-                    Err(e) => Err($crate::CallError::default()),
+                match std::panic::catch_unwind(|| $call_path(self, req)) {
+                    Ok(r) => r,
+                    Err(e) => Err($crate::CallError::new("FFI: caught unwinding panic")),
                 }
             }
         }
