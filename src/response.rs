@@ -67,10 +67,6 @@ impl Response {
         BufWriter::new(&mut self.body)
     }
 
-    pub fn get_meta(&self, key: &str) -> Option<&String> {
-        self.metadata.get(key)
-    }
-
     pub fn with_meta(mut self, key: &str, val: &str) -> Self {
         self.metadata.insert(String::from(key), String::from(val));
         self
